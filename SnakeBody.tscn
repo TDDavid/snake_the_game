@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://c2m5518si1rtl"]
+
+[ext_resource type="Script" path="res://SnakeBody.gd" id="1_hnrqs"]
+
+[sub_resource type="Gradient" id="Gradient_phw6d"]
+colors = PackedColorArray(0, 0.533333, 1, 1, 0, 0.533333, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_f562s"]
+gradient = SubResource("Gradient_phw6d")
+width = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_milwm"]
+size = Vector2(10, 10)
+
+[node name="SnakeBody" type="Node2D"]
+script = ExtResource("1_hnrqs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(10, 10)
+texture = SubResource("GradientTexture1D_f562s")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_milwm")
