@@ -4,6 +4,8 @@ var SnakeBodyPart = preload("res://SnakeBodyPart.tscn")
 var tail_segments = []
 var viewport_rect = Vector2()
 
+signal food_eaten
+
 func is_position_inside_window(new_position: Vector2) -> bool:
 	return new_position.x >= 0 and new_position.y >= 0 and \
 		   new_position.x < viewport_rect.size.x and new_position.y < viewport_rect.size.y
@@ -49,13 +51,17 @@ func _on_area_entered(body):
 		var newTailSegment = SnakeBodyPart.instantiate()
 		
 		var size = $Sprite2D.get_rect().size
-		size = Vector2(500, 500)
-		if !tail_segments.is_empty():
+		size = Vector2(60, 60)
+		
+		if !tail_segments.is_empty(): 
 			var lastSegment = tail_segments.back()
 			newTailSegment.position = lastSegment.position + size
 		else:
 			newTailSegment.position = position + size
+		
+		food_eaten.emit()
 			
 		tail_segments.append(newTailSegment)
 		call_deferred("add_sibling", newTailSegment)
+		
 		

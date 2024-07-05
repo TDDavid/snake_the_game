@@ -9,24 +9,23 @@ var foodInstance = Food.instantiate()
 
 var snake_speed = 200
 
-func spawn_food():
+func move_food():
 	var food_x = randi_range(100, 500)
 	var food_y = randi_range(100, 500)
 	foodInstance.position = Vector2(food_x, food_y)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#foodInstance.area_entered.connect(consume_food)
+	snakeBodyInstance.food_eaten.connect(consume_food)
 	
-	spawn_food()
+	move_food()
 	add_child(foodInstance)
 	
 	snakeBodyInstance.position = Vector2(150, 222)
 	add_child(snakeBodyInstance)
 
 func consume_food():
-	remove_child(foodInstance)
-	spawn_food()
+	move_food()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -36,8 +35,8 @@ func _process(delta):
 
 func handle_input():
 	movement_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-		
 	movement_direction = movement_direction.normalized()
+
 		
 	if Input.is_action_just_pressed("ui_accept"):
 		foodInstance.print_tree_pretty()
