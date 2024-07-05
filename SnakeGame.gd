@@ -6,7 +6,8 @@ var SnakeBody = preload("res://SnakeBody.tscn")
 var movement_direction = Vector2.UP
 var snakeBodyInstance = SnakeBody.instantiate()
 var foodInstance = Food.instantiate()
-
+var useMouseInput = false
+var useUiActionInput = false
 var snake_speed = 200
 
 func move_food():
@@ -34,9 +35,18 @@ func _process(delta):
 	update_position(delta)
 
 func handle_input():
-	movement_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	movement_direction = movement_direction.normalized()
-
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		useUiActionInput = false
+		useMouseInput = true
+	elif Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
+		useUiActionInput = true
+		useMouseInput = false
+		
+	if useMouseInput:
+		movement_direction = snakeBodyInstance.position.direction_to(get_global_mouse_position())
+	elif useUiActionInput:
+		movement_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+		movement_direction = movement_direction.normalized()
 		
 	if Input.is_action_just_pressed("ui_accept"):
 		foodInstance.print_tree_pretty()
