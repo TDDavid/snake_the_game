@@ -30,11 +30,11 @@ func consume_food():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	#print("FPS %d" % Engine.get_frames_per_second())
 	handle_input()
 	update_position(delta)
 	$VBoxContainer/Label.set_text("Score: %s" % snakeBodyInstance.tail_segments.size())
 	$VBoxContainer/Label2.set_text("Input type: %s" % ("mouse" if useMouseInput else "key"))
+	$VBoxContainer/Label3.set_text("FPS %d" % Engine.get_frames_per_second())
 
 func handle_input():
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -45,7 +45,28 @@ func handle_input():
 		useMouseInput = false
 		
 	if useMouseInput:
-		movement_direction = snakeBodyInstance.position.direction_to(get_global_mouse_position())
+		var mousePos = get_global_mouse_position()
+		var distance = snakeBodyInstance.position.distance_to(mousePos)
+		if distance > 40:
+			movement_direction = snakeBodyInstance.position.direction_to(mousePos)
+		else:
+			var alfa = 10
+			var beta = deg_to_rad(alfa)
+			
+			#var a = distance * cos(beta)
+			#var b = sqrt(distance * distance - a * a)
+			#var newPos = mousePos + Vector2(b, a)
+			#movement_direction = snakeBodyInstance.position.direction_to(newPos)
+
+			var a_translated = snakeBodyInstance.position - mousePos
+			var c1 = a_translated[0] * cos(beta) - a_translated[1] * sin(beta)
+			var c2 =  a_translated[1] * cos(beta) + a_translated[0] * sin(beta)
+			var c_rotated = Vector2(c1, c2) + mousePos
+			
+			snakeBodyInstance.position = c_rotated
+			#movement_direction = snakeBodyInstance.position.direction_to(c_rotated)
+			movement_direction = Vector2(0, 0)
+			
 	elif useUiActionInput:
 		movement_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 		movement_direction = movement_direction.normalized()
