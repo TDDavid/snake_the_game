@@ -33,6 +33,8 @@ func _process(delta):
 	#print("FPS %d" % Engine.get_frames_per_second())
 	handle_input()
 	update_position(delta)
+	$VBoxContainer/Label.set_text("Score: %s" % snakeBodyInstance.tail_segments.size())
+	$VBoxContainer/Label2.set_text("Input type: %s" % ("mouse" if useMouseInput else "key"))
 
 func handle_input():
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
